@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator Application</title>
+    <style>
+       /* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body Styling */
+body {
+    background: linear-gradient(135deg, #3a8dff, #6a11cb);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Main Container */
+.container {
+    background-color: #ffffff;
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 100%;
+    max-width: 360px;
+}
+
+/* Heading */
+.container h2 {
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+    color: #333;
+}
+
+/* Label */
+label {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 8px;
+    display: block;
+    text-align: left;
+}
+
+/* Input Fields */
+input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border 0.3s;
+    color: #333;
+}
+
+input[type="text"]:focus {
+    border-color: #6a11cb;
+    outline: none;
+}
+
+/* Buttons */
+button {
+    background-color: #6a11cb;
+    color: #fff;
+    padding: 10px 20px;
+    width: 100%;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #5912b1;
+}
+   </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Password Generator Application by Jihad</h2>
+        <div>
+            <label for="passwordlenth">Enter password length</label><br>
+            <input type="text" id="lenth" placeholder="Enter Password Length"><br>
+        </div>
+        <div>
+            <button>Generate Password</button><br>
+            <input type="text" id="password"><br>
+            <button type="button">Copy to clipboard</button>
+        </div>
+    </div>
+    <script>
+    // Select elements
+const lengthInput = document.getElementById("lenth");
+const passwordInput = document.getElementById("password");
+const generateBtn = document.querySelectorAll("button")[0];
+const copyBtn = document.querySelectorAll("button")[1];
+
+// Create alert message element
+const alertBox = document.createElement("p");
+alertBox.style.color = "red";
+alertBox.style.marginBottom = "15px";
+alertBox.style.fontSize = "0.9rem";
+alertBox.style.display = "none";
+
+// Insert alert box before the generate button
+generateBtn.parentElement.insertBefore(alertBox, generateBtn);
+
+// Allow only numbers in the length input
+lengthInput.addEventListener("input", () => {
+    lengthInput.value = lengthInput.value.replace(/[^0-9]/g, "");
+});
+
+// Password generator function
+function generatePassword(length) {
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+[]{}|;:,.<>?";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        password += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return password;
+}
+
+// Generate Password Button
+generateBtn.addEventListener("click", () => {
+    const length = parseInt(lengthInput.value);
+
+    if (!lengthInput.value) {
+        alertBox.textContent = "Please enter a password length.";
+        alertBox.style.color = "red";
+        alertBox.style.display = "block";
+        passwordInput.value = "";
+        return;
+    }
+
+    if (length < 6) {
+        alertBox.textContent = "Password length must be at least 6 characters.";
+        alertBox.style.color = "red";
+        alertBox.style.display = "block";
+        passwordInput.value = "";
+        return;
+    }
+
+    // Clear alert and generate password
+    alertBox.style.display = "none";
+    const newPassword = generatePassword(length);
+    passwordInput.value = newPassword;
+});
+
+// Copy to Clipboard Button
+copyBtn.addEventListener("click", () => {
+    const password = passwordInput.value;
+    if (password === "") {
+        alertBox.textContent = "Nothing to copy. Generate a password first.";
+        alertBox.style.color = "red";
+        alertBox.style.display = "block";
+        return;
+    }
+
+    navigator.clipboard.writeText(password).then(() => {
+        alertBox.textContent = "Password copied to clipboard!";
+        alertBox.style.color = "green";
+        alertBox.style.display = "block";
+    }).catch(() => {
+        alertBox.textContent = "Failed to copy password.";
+        alertBox.style.color = "red";
+        alertBox.style.display = "block";
+    });
+});
+
+    </script>
+</body>
+
+</html>
